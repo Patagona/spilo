@@ -166,7 +166,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
             && if [ "$version" = "9.6" ] || [ "$version" = "10" ] || [ "$version" = "11" ] ; then \
                 cd timescaledb \
                 && rm -fr build \
-                && ./bootstrap -DAPACHE_ONLY=1 -DSEND_TELEMETRY_DEFAULT=NO \
+                && ./bootstrap -DAPACHE_ONLY=0 -DSEND_TELEMETRY_DEFAULT=NO \
                 && make -C build install \
                 && strip /usr/lib/postgresql/$version/lib/timescaledb*.so \
                 && cd ..; \
