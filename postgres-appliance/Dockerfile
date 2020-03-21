@@ -1,5 +1,5 @@
 ARG PGVERSION=11
-ARG TIMESCALEDB=1.4.2
+ARG TIMESCALEDB=1.6.1
 ARG DEMO=false
 
 FROM ubuntu:18.04 as builder
@@ -166,7 +166,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
             && if [ "$version" = "9.6" ] || [ "$version" = "10" ] || [ "$version" = "11" ] ; then \
                 cd timescaledb \
                 && rm -fr build \
-                && ./bootstrap -DAPACHE_ONLY=1 -DSEND_TELEMETRY_DEFAULT=NO \
+                && ./bootstrap -DAPACHE_ONLY=0 -DSEND_TELEMETRY_DEFAULT=NO -DREGRESS_CHECKS=OFF \
                 && make -C build install \
                 && strip /usr/lib/postgresql/$version/lib/timescaledb*.so \
                 && cd ..; \
