@@ -27,7 +27,7 @@ How to Build This Docker Image
 There are a few build arguments defined in the Dockerfile and it is possible to change them by specifying ``--build-arg`` arguments:
 
 - WITH_PERL=false # set to true if you want to install perl and plperl packages into image
-- PGVERSION="12"
+- PGVERSION="13"
 - PGOLDVERSIONS="9.5 9.6 10 11"
 - DEMO=false # set to true to build the smallest possible image which will work only on Kubernetes
 - TIMESCALEDB_APACHE_ONLY=true # set to false to build timescaledb community version (Timescale License)
