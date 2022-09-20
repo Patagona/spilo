@@ -1,0 +1,16 @@
+version: "3.5"
+services:
+  spilo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # set to true if you want to install perl and plperl packages into image
+        WITH_PERL: 'false'
+        PGVERSION: '13.3'
+        PGOLDVERSIONS: '9.5 9.6 10 11 12'
+        # set to true to build the smallest possible image which will work only on Kubernetes
+        DEMO: 'false'
+        # set to false to build timescaledb community version (Timescale License)
+        TIMESCALEDB_APACHE_ONLY: 'false'
+        TIMESCALEDB: '2.3.1'

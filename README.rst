@@ -19,16 +19,16 @@ Spilo's setup assumes that you've correctly configured a load balancer (HAProxy,
 How to Build This Docker Image
 ==============================
 
-    $ cd postgres-appliance
+    $ docker-compose -f postgres-appliance/docker-compose.yaml build
 
-    $ docker build --tag $YOUR_TAG .
+    $ docker tag <IMAGE_ID> docker-registry.patagona.de/spilo:<version>
 
 
 There are a few build arguments defined in the Dockerfile and it is possible to change them by specifying ``--build-arg`` arguments:
 
 - WITH_PERL=false # set to true if you want to install perl and plperl packages into image
-- PGVERSION="12"
-- PGOLDVERSIONS="9.5 9.6 10 11"
+- PGVERSION="13"
+- PGOLDVERSIONS="9.5 9.6 10 11 12"
 - DEMO=false # set to true to build the smallest possible image which will work only on Kubernetes
 - TIMESCALEDB_APACHE_ONLY=true # set to false to build timescaledb community version (Timescale License)
 - ADDITIONAL_LOCALES= # additional UTF-8 locales to build into image (example: "de_DE pl_PL fr_FR")
