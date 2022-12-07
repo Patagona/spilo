@@ -322,10 +322,12 @@ ltree,pgcrypto,pgq,pg_trgm,postgres_fdw,tablefunc,uuid-ossp,hypopg'
     threshold_backup_size_percentage: {{WALE_BACKUP_THRESHOLD_PERCENTAGE}}
     retries: 2
     no_master: 1
+    wal_dir: "{{WALG_DIRECTORY}}"
   {{/USE_WALE}}
   basebackup_fast_xlog:
     command: /scripts/basebackup.sh
     retries: 2
+    wal_dir: "{{WALG_DIRECTORY}}"
 {{#STANDBY_WITH_WALE}}
   bootstrap_standby_with_wale:
     command: envdir "{{STANDBY_WALE_ENV_DIR}}" bash /scripts/wale_restore.sh
@@ -333,6 +335,7 @@ ltree,pgcrypto,pgq,pg_trgm,postgres_fdw,tablefunc,uuid-ossp,hypopg'
     threshold_backup_size_percentage: {{WALE_BACKUP_THRESHOLD_PERCENTAGE}}
     retries: 2
     no_master: 1
+    wal_dir: "{{WALG_DIRECTORY}}"
 {{/STANDBY_WITH_WALE}}
 '''
 
