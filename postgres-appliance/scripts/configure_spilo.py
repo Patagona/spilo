@@ -229,7 +229,7 @@ bootstrap:
   method: clone_with_wale
   clone_with_wale:
     command: envdir "{{CLONE_WALE_ENV_DIR}}" python3 /scripts/clone_with_wale.py
-      --recovery-target-time="{{CLONE_TARGET_TIME}}" --waldir="{{WALG_DIRECTORY}}"
+      --recovery-target-time="{{CLONE_TARGET_TIME}}" --waldir="{{WAL_DIRECTORY}}"
     recovery_conf:
         restore_command: envdir "{{CLONE_WALE_ENV_DIR}}" timeout "{{WAL_RESTORE_TIMEOUT}}"
           /scripts/restore_command.sh "%f" "%p"
@@ -370,12 +370,12 @@ hstore,hypopg,intarray,ltree,pgcrypto,pgq,pgq_node,pg_trgm,postgres_fdw,tablefun
     threshold_backup_size_percentage: {{WALE_BACKUP_THRESHOLD_PERCENTAGE}}
     retries: 2
     no_master: 1
-    wal_dir: "{{WALG_DIRECTORY}}"
+    wal_dir: "{{WAL_DIRECTORY}}"
   {{/USE_WALE}}
   basebackup_fast_xlog:
     command: /scripts/basebackup.sh
     retries: 2
-    wal_dir: "{{WALG_DIRECTORY}}"
+    wal_dir: "{{WAL_DIRECTORY}}"
 {{#STANDBY_WITH_WALE}}
   bootstrap_standby_with_wale:
     command: envdir "{{STANDBY_WALE_ENV_DIR}}" bash /scripts/wale_restore.sh
@@ -383,7 +383,7 @@ hstore,hypopg,intarray,ltree,pgcrypto,pgq,pgq_node,pg_trgm,postgres_fdw,tablefun
     threshold_backup_size_percentage: {{WALE_BACKUP_THRESHOLD_PERCENTAGE}}
     retries: 2
     no_master: 1
-    wal_dir: "{{WALG_DIRECTORY}}"
+    wal_dir: "{{WAL_DIRECTORY}}"
 {{/STANDBY_WITH_WALE}}
 '''
 

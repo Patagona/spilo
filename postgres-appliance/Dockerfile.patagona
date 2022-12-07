@@ -5,7 +5,7 @@ FROM docker-registry.patagona.de/spilo:ts2.3.1-ts1.7.5-pg13-pg12-pg11-4454a37917
 ENV WALG_VERSION=v2.0.1
 # Our system is using separate wal directory.
 # Defining this env variable to reuse it elsewhere.
-ENV WALG_DIRECTORY='/wal'
+ENV WAL_DIRECTORY='/wal'
 
 RUN export DISTRIB_RELEASE=$(sed -n 's/DISTRIB_RELEASE=//p' /etc/lsb-release) \
     && curl -sL https://github.com/wal-g/wal-g/releases/download/$WALG_VERSION/wal-g-pg-ubuntu-$DISTRIB_RELEASE-amd64.tar.gz \
