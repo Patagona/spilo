@@ -27,6 +27,7 @@ services:
         image: ${SPILO_TEST_IMAGE:-spilo}
         networks: [ demo ]
         environment:
+            WAL_DIRECTORY: /wal
             SPILO_PROVIDER: 'local'
             AWS_ACCESS_KEY_ID: *access_key
             AWS_SECRET_ACCESS_KEY: *secret_key
@@ -41,6 +42,13 @@ services:
             ENABLE_PG_MON: 'true'
             SPILO_CONFIGURATION: |
               bootstrap:
+                initdb:
+                  - waldir: /wal
+                  # The following parameters are default settings
+                  # https://patroni.readthedocs.io/en/latest/SETTINGS.html#bootstrap-configuration
+                  - encoding: UTF8
+                  - locale: en_US.UTF-8
+                  - data-checksums
                 dcs:
                   loop_wait: 2
                   postgresql:
@@ -59,13 +67,24 @@ services:
             CLONE_WALE_DISABLE_S3_SSE: *wale_disable_s3_sse
         hostname: spilo1
         container_name: demo-spilo1
+        volumes:
+            - wal1:/wal
 
     spilo2:
         <<: *spilo
         hostname: spilo2
         container_name: demo-spilo2
+        volumes:
+        - wal2:/wal
 
     spilo3:
         <<: *spilo
         hostname: spilo3
         container_name: demo-spilo3
+        volumes:
+        - wal3:/wal
+
+volumes:
+    wal1:
+    wal2:
+    wal3:
