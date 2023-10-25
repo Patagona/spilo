@@ -45,7 +45,10 @@ COPY --from=dependencies-builder /builddeps/*.deb /builddeps/
 
 ARG PGVERSION
 ARG TIMESCALEDB
-ARG TIMESCALEDB_APACHE_ONLY=true
+# set to false to build timescaledb community version (Timescale License)
+# Timescale license has more features and one of them is used in our production system.
+# Feature comparison: https://docs.timescale.com/about/latest/timescaledb-editions/#feature-comparison
+ARG TIMESCALEDB_APACHE_ONLY=false
 ARG TIMESCALEDB_TOOLKIT=true
 ARG COMPRESS
 ARG PGOLDVERSIONS="11 12 13 14 15"
