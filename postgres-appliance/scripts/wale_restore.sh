@@ -91,7 +91,7 @@ fi
 
 ATTEMPT=0
 while true; do
-    if $WAL_E backup-fetch "$DATA_DIR" LATEST; then
+    if $WAL_E backup-fetch "$DATA_DIR" LATEST --resore-only=offerstore/omnia_product_property_values,offerstore/omnia_product_property_keys; then
         version=$(<"$DATA_DIR/PG_VERSION")
         [[ "$version" =~ \. ]] && wal_name=xlog || wal_name=wal
         readonly pg_wal_location=$DATA_DIR/pg_$wal_name
