@@ -1,6 +1,5 @@
 ARG BASE_IMAGE=ubuntu:22.04
 ARG PGVERSION=17
-ARG TIMESCALEDB="2.15.3 2.18.0"
 ARG DEMO=false
 ARG COMPRESS=false
 ARG ADDITIONAL_LOCALES=
@@ -44,7 +43,6 @@ COPY build_scripts/base.sh /builddeps/
 COPY --from=dependencies-builder /builddeps/*.deb /builddeps/
 
 ARG PGVERSION
-ARG TIMESCALEDB
 # set to false to build timescaledb community version (Timescale License)
 # Timescale license has more features and one of them is used in our production system.
 # Feature comparison: https://docs.timescale.com/about/latest/timescaledb-editions/#feature-comparison
