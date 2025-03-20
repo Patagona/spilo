@@ -122,6 +122,7 @@ for version in $DEB_PG_SUPPORTED_VERSIONS; do
         "${EXTRAS[@]}"
 
     # Clean up timescaledb versions except the last 5 minor versions
+    # To ensure backward compatibility with our production system i.e 2.11.2
     exclude_patterns=()
     versions=$(find "/usr/lib/postgresql/$version/lib/" -name 'timescaledb-2.*.so' | sed -rn 's/.*timescaledb-([1-9]+\.[0-9]+\.[0-9]+)\.so$/\1/p' | sort -rV)
     latest_minor_versions=$(echo "$versions" | awk -F. '{print $1"."$2}' | uniq | head -n 5)
@@ -131,7 +132,7 @@ for version in $DEB_PG_SUPPORTED_VERSIONS; do
             exclude_patterns+=(! -name timescaledb-tsl-"${full_version}".so)
         done
     done
-    find "/usr/lib/postgresql/$version/lib/" \( -name 'timescaledb-2.*.so' -o -name 'timescaledb-tsl-2.*.so' \) "${exclude_patterns[@]}" -delete
+    # find "/usr/lib/postgresql/$version/lib/" \( -name 'timescaledb-2.*.so' -o -name 'timescaledb-tsl-2.*.so' \) "${exclude_patterns[@]}" -delete
 
     # Install 3rd party stuff
 
