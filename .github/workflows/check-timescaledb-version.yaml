@@ -1,0 +1,30 @@
+name: Check TimescaleDB Version
+
+on:
+  push:
+    branches:
+      - CON-1086_final_version
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build spilo docker image
+      run: cd postgres-appliance && docker build --build-arg PGVERSION=15 --build-arg PGOLDVERSIONS="" -t spilo .
+
+    - name: Check TimescaleDB version (installed packages)
+      run: docker run --rm spilo dpkg -l | grep timescaledb
+
+    - name: Check TimescaleDB shared library versions
+      run: |
+        echo "=== PostgreSQL 15 ==="
+        docker run --rm spilo find /usr/lib/postgresql/15/lib/ -name 'timescaledb-*.so' | sort -V
+
+    - name: Check TimescaleDB default version in extension
+      run: |
+        echo "=== PostgreSQL 15 ==="
+        docker run --rm spilo cat /usr/share/postgresql/15/extension/timescaledb.control 2>/dev/null || echo "No timescaledb.control found"
