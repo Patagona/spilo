@@ -128,7 +128,7 @@ for version in $DEB_PG_SUPPORTED_VERSIONS; do
     versions=$(find "/usr/lib/postgresql/$version/lib/" -name 'timescaledb-2.*.so' | sed -rn 's/.*timescaledb-([1-9]+\.[0-9]+\.[0-9]+)\.so$/\1/p' | sort -rV)
     
     # Calculate the number of versions dynamically based on the lowest PG version's latest minor
-    num_versions=5
+    num_versions=8
     if [ -n "$first_latest_minor" ]; then
         minor_versions=$(echo "$versions" | awk -F. '{print $1"."$2}' | uniq)
         position=0
@@ -154,7 +154,7 @@ for version in $DEB_PG_SUPPORTED_VERSIONS; do
             exclude_patterns+=(! -name timescaledb-tsl-"${full_version}".so)
         done
     done
-    # find "/usr/lib/postgresql/$version/lib/" \( -name 'timescaledb-2.*.so' -o -name 'timescaledb-tsl-2.*.so' \) "${exclude_patterns[@]}" -delete
+    find "/usr/lib/postgresql/$version/lib/" \( -name 'timescaledb-2.*.so' -o -name 'timescaledb-tsl-2.*.so' \) "${exclude_patterns[@]}" -delete
 
     # Save the latest minor version from the first PG version
     if [ -z "$first_latest_minor" ]; then
