@@ -1,0 +1,10 @@
+services:
+  spilo:
+    build:
+      context: .
+      network: host
+      args:
+        PGVERSION: 15
+        PGOLDVERSIONS: ""
+        TIMESCALEDB_APACHE_ONLY: "false"
+    image: spilo
