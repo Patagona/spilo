@@ -14,10 +14,13 @@ while getopts ":-:" optchar; do
         retries=* )
             RETRIES=${OPTARG#*=}
             ;;
+        wal_dir=* )
+            WAL_DIR=${OPTARG#*=}
+            ;;
     esac
 done
 
-[[ -z $DATA_DIR || -z "$CONNSTR" || ! $RETRIES =~ ^[1-9]$ ]] && exit 1
+[[ -z $DATA_DIR || -z $WAL_DIR || -z "$CONNSTR" || ! $RETRIES =~ ^[1-9]$ ]] && exit 1
 
 if [[ ! $CONNSTR =~ dbname= ]]; then
     CONNSTR="${CONNSTR} dbname=postgres"
@@ -106,7 +109,7 @@ fi
 
 ATTEMPT=0
 while [[ $((ATTEMPT++)) -le $RETRIES ]]; do
-    pg_basebackup --pgdata="${DATA_DIR}" "${PG_BASEBACKUP_OPTS[@]}" --dbname="${CONNSTR}" &
+    pg_basebackup --pgdata="${DATA_DIR}" --waldir="$WAL_DIR" "${PG_BASEBACKUP_OPTS[@]}" --dbname="${CONNSTR}" &
     basebackup_pid=$!
     wait $basebackup_pid
     EXITCODE=$?

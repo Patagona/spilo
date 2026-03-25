@@ -27,10 +27,13 @@ while getopts ":-:" optchar; do
         no_leader=*|no-master=* )
             NO_MASTER=${OPTARG#*=}
             ;;
+        wal_dir=* )
+            WAL_DIR=${OPTARG#*=}
+            ;;
     esac
 done
 
-[[ -z $DATA_DIR ]] && exit 1
+[[ -z $DATA_DIR || -z $WAL_DIR ]] && exit 1
 [[ -z $NO_MASTER && -z "$CONNSTR" ]] && exit 1
 
 
@@ -82,8 +85,12 @@ while true; do
     if wal-g backup-fetch "$DATA_DIR" LATEST; then
         version=$(<"$DATA_DIR/PG_VERSION")
         [[ "$version" =~ \. ]] && wal_name=xlog || wal_name=wal
-        readonly wal_dir=$DATA_DIR/pg_$wal_name
-        [[ ! -d $wal_dir ]] && rm -f "$wal_dir" && mkdir "$wal_dir"
+        readonly pg_wal_location=$DATA_DIR/pg_$wal_name
+        # Create symlink to separate WAL EBS volume instead of a regular directory.
+        # wal-g backup-fetch restores base backup without the WAL directory.
+        # Since our system persists WAL segments on a separate volume, we create
+        # a symlink so PostgreSQL writes WALs to the mounted EBS volume.
+        [[ ! -d $pg_wal_location ]] && ln -s "$WAL_DIR" "$pg_wal_location"
         # remove broken symlinks from PGDATA
         find "$DATA_DIR" -xtype l -delete
         exit 0

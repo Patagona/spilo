@@ -229,7 +229,7 @@ bootstrap:
   method: clone_with_walg
   clone_with_walg:
     command: envdir "{{CLONE_WALG_ENV_DIR}}" python3 /scripts/clone_with_walg.py
-      --recovery-target-time="{{CLONE_TARGET_TIME}}"
+      --recovery-target-time="{{CLONE_TARGET_TIME}}" --waldir="{{WAL_DIRECTORY}}"
     recovery_conf:
         restore_command: envdir "{{CLONE_WALG_ENV_DIR}}" timeout "{{WAL_RESTORE_TIMEOUT}}"
           /scripts/restore_command.sh "%f" "%p"
@@ -380,10 +380,12 @@ hstore,hypopg,intarray,ltree,pgcrypto,pgq,pgq_node,pg_trgm,postgres_fdw,roaringb
     threshold_backup_size_percentage: {{WALG_BACKUP_THRESHOLD_PERCENTAGE}}
     retries: 2
     no_leader: 1
+    wal_dir: "{{WAL_DIRECTORY}}"
   {{/USE_WALG}}
   basebackup_fast_xlog:
     command: /scripts/basebackup.sh
     retries: 2
+    wal_dir: "{{WAL_DIRECTORY}}"
 {{#STANDBY_WITH_WALG}}
   bootstrap_standby_with_wale:
     command: envdir "{{STANDBY_WALG_ENV_DIR}}" bash /scripts/walg_restore.sh
@@ -391,6 +393,7 @@ hstore,hypopg,intarray,ltree,pgcrypto,pgq,pgq_node,pg_trgm,postgres_fdw,roaringb
     threshold_backup_size_percentage: {{WALG_BACKUP_THRESHOLD_PERCENTAGE}}
     retries: 2
     no_leader: 1
+    wal_dir: "{{WAL_DIRECTORY}}"
 {{/STANDBY_WITH_WALG}}
 '''
 
@@ -583,6 +586,7 @@ def get_placeholders(provider):
     placeholders.setdefault('WAL_BUCKET_SCOPE_PREFIX', '{0}-'.format(placeholders['NAMESPACE'])
                             if placeholders['NAMESPACE'] not in ('default', '') else '')
     placeholders.setdefault('WAL_BUCKET_SCOPE_SUFFIX', '')
+    placeholders.setdefault('WAL_DIRECTORY', os.environ.get('WAL_DIRECTORY', ''))
     placeholders.setdefault('WAL_RESTORE_TIMEOUT', '0')
     # the env dir path is still called "wal-e.d" for backwards compatibility: many existing deployments, scripts,
     # or manifests expect this path, even though wal-e itself is not used (wal-g reads env vars from here too)

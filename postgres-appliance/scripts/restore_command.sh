@@ -22,13 +22,25 @@ fi
 
 readonly wal_filename=$1
 readonly wal_destination=$2
+# Optional: location of "wal_fast" directory.
+# When using a separate WAL volume, the default path calculation breaks
+# because realpath resolves the symlink. Pass the wal_fast path explicitly.
+readonly wal_fast_location=$3
 
 [[ -z $wal_filename || -z $wal_destination ]] && exit 1
 
 wal_dir=$(dirname "$wal_destination")
 readonly wal_dir
-wal_fast_source=$(dirname "$(dirname "$(realpath "$wal_dir")")")/wal_fast/$wal_filename
-readonly wal_fast_source
+
+if [[ -z $wal_fast_location ]]; then
+    # default implementation
+    wal_fast_source=$(dirname "$(dirname "$(realpath "$wal_dir")")")/wal_fast/$wal_filename
+    readonly wal_fast_source
+else
+    # when using separate wal directory
+    wal_fast_source="$wal_fast_location/$wal_filename"
+    readonly wal_fast_source
+fi
 
 [[ -f $wal_fast_source ]] && exec mv "${wal_fast_source}" "${wal_destination}"
 
