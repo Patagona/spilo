@@ -128,7 +128,7 @@ for version in $DEB_PG_SUPPORTED_VERSIONS; do
     versions=$(find "/usr/lib/postgresql/$version/lib/" -name 'timescaledb-2.*.so' | sed -rn 's/.*timescaledb-([1-9]+\.[0-9]+\.[0-9]+)\.so$/\1/p' | sort -rV)
     
     # Calculate the number of versions dynamically based on the lowest PG version's latest minor
-    num_versions=8
+    num_versions=9
     if [ -n "$first_latest_minor" ]; then
         minor_versions=$(echo "$versions" | awk -F. '{print $1"."$2}' | uniq)
         position=0
