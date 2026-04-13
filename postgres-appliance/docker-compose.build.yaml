@@ -4,7 +4,7 @@ services:
       context: .
       network: host
       args:
-        PGVERSION: 15
-        PGOLDVERSIONS: ""
+        PGVERSION: 18
+        PGOLDVERSIONS: "15"
         TIMESCALEDB_APACHE_ONLY: "false"
     image: spilo
